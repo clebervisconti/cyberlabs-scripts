@@ -3,21 +3,22 @@ import sys
 import plistlib
 
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: generate_shortcut.py <absolute_path_to_save_markdown.sh> <output_path.shortcut>")
+    if len(sys.argv) < 2:
+        print("Usage: generate_shortcut.py <output_path.shortcut>")
         sys.exit(1)
 
-    script_path = sys.argv[1]
-    output_path = sys.argv[2]
+    output_path = sys.argv[1]
 
-    # We use a structure representing a valid Apple Shortcut that runs a shell script.
-    # The action identifier 'is.workflow.actions.runshellscript' executes the command.
+    # Native Shortcut structure representing:
+    # 1. Get Clipboard
+    # 2. Make Markdown from Shortcut Input
+    # 3. Set name of Markdown to clipboard.md
+    # 4. Save Renamed Item
     shortcut_data = {
         "WFWorkflowMinimumClientVersionString": "900",
         "WFWorkflowMinimumClientVersion": 900,
         "WFWorkflowClientVersion": "2600.5",
         "WFWorkflowTypes": [
-            "NCWidget",
             "QuickActions"
         ],
         "WFWorkflowInputContentItemClasses": [
@@ -40,18 +41,63 @@ def main():
             "WFStringContentItem",
             "WFURLContentItem"
         ],
+        "WFWorkflowNoInputBehavior": {
+            "Name": "WFWorkflowNoInputBehaviorGetClipboard",
+            "Parameters": {}
+        },
         "WFWorkflowActions": [
             {
-                "WFWorkflowActionIdentifier": "is.workflow.actions.runshellscript",
+                "WFWorkflowActionIdentifier": "is.workflow.actions.getclipboard",
                 "WFWorkflowActionParameters": {
-                    "ScriptActionText": f'bash "{script_path}"',
-                    "Shell": "/bin/zsh"
+                    "UUID": "E9E9C7E5-3A26-4444-9B05-9D270AD3D2B0"
+                }
+            },
+            {
+                "WFWorkflowActionIdentifier": "is.workflow.actions.getmarkdownfromrichtext",
+                "WFWorkflowActionParameters": {
+                    "UUID": "B9057B43-A109-4C8D-9818-D7270AD3D2B5",
+                    "WFInput": {
+                        "Value": {
+                            "Type": "ExtensionInput"
+                        },
+                        "WFSerializationType": "WFTextTokenAttachment"
+                    }
+                }
+            },
+            {
+                "WFWorkflowActionIdentifier": "is.workflow.actions.setitemname",
+                "WFWorkflowActionParameters": {
+                    "UUID": "2EE99C2A-18D3-48FA-97E4-500D06940026",
+                    "WFInput": {
+                        "Value": {
+                            "OutputName": "Markdown from Rich Text",
+                            "OutputUUID": "B9057B43-A109-4C8D-9818-D7270AD3D2B5",
+                            "Type": "ActionOutput"
+                        },
+                        "WFSerializationType": "WFTextTokenAttachment"
+                    },
+                    "WFName": "clipboard.md"
+                }
+            },
+            {
+                "WFWorkflowActionIdentifier": "is.workflow.actions.documentpicker.save",
+                "WFWorkflowActionParameters": {
+                    "UUID": "F4B4E76C-100D-4C67-A281-229202613C2F",
+                    "WFInput": {
+                        "Value": {
+                            "OutputName": "Renamed Item",
+                            "OutputUUID": "2EE99C2A-18D3-48FA-97E4-500D06940026",
+                            "Type": "ActionOutput"
+                        },
+                        "WFSerializationType": "WFTextTokenAttachment"
+                    },
+                    "WFAskWhereToSave": True
                 }
             }
         ],
         "WFWorkflowIcon": {
-            "WFWorkflowIconGlyphNumber": 59511, # Icon shape
-            "WFWorkflowIconStartColor": 431817727 # Icon color
+            "WFWorkflowIconGlyphNumber": 59511, # Document/file icon
+            "WFWorkflowIconStartColor": 431817727 # Blue color
         }
     }
 
