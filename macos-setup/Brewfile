@@ -1,0 +1,54 @@
+# Brewfile — Homebrew packages captured from the MacBook Pro.
+#
+# Regenerate on the source Mac after installing/removing apps:
+#   brew bundle dump --file=macos-setup/Brewfile --force
+#
+# Install everything on a new Mac (run by bootstrap.sh, or standalone):
+#   brew bundle --file=macos-setup/Brewfile
+#
+# ---------------------------------------------------------------------------
+# Command-line tools (formulae)
+# ---------------------------------------------------------------------------
+
+# Python version management
+brew "pyenv"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.12"
+# ---------------------------------------------------------------------------
+# GUI applications (casks)
+# ---------------------------------------------------------------------------
+
+# AI Coding Agent IDE
+cask "antigravity-ide"
+# Anthropic's official Claude AI desktop app
+cask "claude"
+# App to build and share containerised applications and microservices
+cask "docker-desktop"
+# Desktop client for GitHub repositories
+cask "github"
+# Web browser
+cask "google-chrome"
+# Discover, download, and run local LLMs
+cask "lm-studio"
+# Office suite
+cask "microsoft-office"
+# AI note-taking for online meetings, phone calls, and in-person conversations
+cask "plaud"
+# Open-source code editor
+cask "visual-studio-code"
+# Video communication and virtual meeting platform
+cask "webex"
+# Native desktop client for WhatsApp
+cask "whatsapp"
+# Video communication and virtual meeting platform
+cask "zoom"
+
+# ---------------------------------------------------------------------------
+# Mac App Store apps (optional)
+# ---------------------------------------------------------------------------
+# None captured — you don't have the `mas` CLI installed. To include App Store
+# apps in this setup: install `mas` (uncomment below), sign in to the App Store,
+# find IDs with `mas list`, then add lines like `mas "App", id: 123456`.
+#
+# brew "mas"
+# mas "Keynote", id: 409183694
