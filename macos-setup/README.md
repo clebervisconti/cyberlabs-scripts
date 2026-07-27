@@ -61,6 +61,7 @@ A setup script shouldn't handle credentials or system-security prompts. After
 - Grant **Full Disk Access / Accessibility / Screen Recording** where needed
   (System Settings ▸ Privacy & Security).
 - Sign in to **Docker Desktop**, **VS Code Settings Sync**, **Chrome** profile.
+- Authenticate the **GitHub CLI** so `git push` works: `gh auth login`.
 - Set the **computer name** (optional block in `macos-defaults.sh`).
 - Restore **SSH/GPG keys** and any dotfiles you keep elsewhere.
 - **Log out / restart** so all Dock, Finder and input settings fully apply.

@@ -2,6 +2,7 @@
 #
 # Regenerate on the source Mac after installing/removing apps:
 #   brew bundle dump --file=macos-setup/Brewfile --force
+#   (this rewrites the file; re-add the section comments below if you want them)
 #
 # Install everything on a new Mac (run by bootstrap.sh, or standalone):
 #   brew bundle --file=macos-setup/Brewfile
@@ -10,10 +11,13 @@
 # Command-line tools (formulae)
 # ---------------------------------------------------------------------------
 
+# GitHub command-line tool
+brew "gh"
 # Python version management
 brew "pyenv"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.12"
+
 # ---------------------------------------------------------------------------
 # GUI applications (casks)
 # ---------------------------------------------------------------------------
