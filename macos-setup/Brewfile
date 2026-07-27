@@ -11,6 +11,8 @@
 # Command-line tools (formulae)
 # ---------------------------------------------------------------------------
 
+# Tool for managing dock items (used by configure-dock.sh)
+brew "dockutil"
 # GitHub command-line tool
 brew "gh"
 # Python version management

@@ -46,7 +46,17 @@ defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool true
 #   defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
 ###############################################################################
-# Mouse & trackpad
+# Mouse & scrolling
+#
+# Your input devices are Logitech (MX Vertical mouse + MX Mechanical keyboard),
+# handled natively by macOS — Logi Options+ is NOT installed. A generic/non-Apple
+# mouse is configured through `com.apple.driver.AppleHIDMouse`, so THAT is what we
+# replicate. The Apple Magic Mouse / Magic Trackpad domains do not apply to you
+# and are intentionally omitted.
+#
+# !! IMPORTANT: these mouse & scroll-direction settings are read by the input
+# !! system at login. They will NOT take effect until you LOG OUT and back in
+# !! (or restart). `killall` alone does not reload them.
 ###############################################################################
 
 # Scroll direction — natural scrolling OFF (traditional direction)
@@ -54,21 +64,15 @@ defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 
 # Pointer tracking speed
 defaults write NSGlobalDomain com.apple.mouse.scaling -float 1.5
-defaults write NSGlobalDomain com.apple.trackpad.scaling -float 1
 
-# Magic Mouse (applies once paired)
-defaults write com.apple.AppleMultitouchMouse MouseButtonMode -string "OneButton"
-defaults write com.apple.AppleMultitouchMouse MouseOneFingerDoubleTapGesture -int 0
-defaults write com.apple.AppleMultitouchMouse MouseTwoFingerDoubleTapGesture -int 3
-defaults write com.apple.AppleMultitouchMouse MouseTwoFingerHorizSwipeGesture -int 2
-defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode -string "OneButton"
-defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseHorizontalScroll -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseVerticalScroll -bool true
-
-# Magic Trackpad (applies once paired) — tap to click on, three-finger drag off
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool false
+# Generic (Logitech / non-Apple) mouse — button & scroll mapping
+defaults write com.apple.driver.AppleHIDMouse Button1 -int 1          # left  button = primary click
+defaults write com.apple.driver.AppleHIDMouse Button2 -int 1          # right button = secondary (right) click
+defaults write com.apple.driver.AppleHIDMouse ButtonDominance -int 1
+defaults write com.apple.driver.AppleHIDMouse ScrollV -int 1          # vertical scroll enabled
+defaults write com.apple.driver.AppleHIDMouse ScrollH -int 1          # horizontal scroll enabled
+defaults write com.apple.driver.AppleHIDMouse ScrollS -int 4          # scroll speed
+defaults write com.apple.driver.AppleHIDMouse ScrollSSize -int 30
 
 ###############################################################################
 # Finder
@@ -133,4 +137,11 @@ for app in Finder Dock SystemUIServer; do
   killall "$app" >/dev/null 2>&1 || true
 done
 
-echo "==> Done. Some changes may require a logout/restart to fully apply."
+echo ""
+echo "==> Done."
+echo ""
+echo "    ┌──────────────────────────────────────────────────────────────┐"
+echo "    │  LOG OUT and back in (or restart) now.                         │"
+echo "    │  Mouse settings (right-click, scroll direction, pointer speed) │"
+echo "    │  are only loaded at login — they will NOT change until you do.  │"
+echo "    └──────────────────────────────────────────────────────────────┘"

@@ -9,14 +9,19 @@
 #   4. Homebrew + shell integration
 #   5. all apps/formulae from Brewfile
 #   6. macOS system preferences (macos-defaults.sh)
+#   7. Dock icons (configure-dock.sh, via dockutil)
 #
 # Usage:
 #   ./bootstrap.sh                 # do everything
 #   ./bootstrap.sh --skip-brew     # skip Homebrew + Brewfile
 #   ./bootstrap.sh --skip-defaults # skip macOS system preferences
 #   ./bootstrap.sh --skip-rosetta  # skip Rosetta 2
+#   ./bootstrap.sh --skip-dock     # skip Dock icon layout
 #
 # Idempotent: safe to run more than once.
+#
+# NOTE: mouse & scroll-direction settings only load at login — LOG OUT and back
+# in (or restart) after this finishes for them to take effect.
 
 set -euo pipefail
 
@@ -25,11 +30,13 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKIP_BREW=false
 SKIP_DEFAULTS=false
 SKIP_ROSETTA=false
+SKIP_DOCK=false
 for arg in "$@"; do
   case "$arg" in
     --skip-brew)     SKIP_BREW=true ;;
     --skip-defaults) SKIP_DEFAULTS=true ;;
     --skip-rosetta)  SKIP_ROSETTA=true ;;
+    --skip-dock)     SKIP_DOCK=true ;;
     -h|--help)
       grep '^#' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     *)
@@ -133,6 +140,18 @@ if [[ "$SKIP_DEFAULTS" == false ]]; then
 fi
 
 # ---------------------------------------------------------------------------
+# 7. Dock icons (needs dockutil from the Brewfile)
+# ---------------------------------------------------------------------------
+if [[ "$SKIP_DOCK" == false ]]; then
+  if command -v dockutil >/dev/null 2>&1; then
+    log "Configuring Dock icons"
+    bash "$DIR/configure-dock.sh"
+  else
+    warn "dockutil not found — skipping Dock icons. Install it and run ./configure-dock.sh"
+  fi
+fi
+
+# ---------------------------------------------------------------------------
 # Done — manual steps
 # ---------------------------------------------------------------------------
 log "Bootstrap complete 🎉"
@@ -144,10 +163,14 @@ cat <<'EOF'
       * Grant Full Disk Access / Accessibility / Screen Recording to apps
         that need it (System Settings ▸ Privacy & Security).
       * Sign in to Docker Desktop, VS Code sync, Chrome profile, etc.
+      * Authenticate the GitHub CLI:  gh auth login
       * Set the computer name (see the optional block in macos-defaults.sh).
       * Restore any dotfiles / SSH keys / GPG keys you keep elsewhere.
+      * Logitech devices: settings are replicated natively, but if you ever
+        install Logi Options+, its config is app-managed (not in this script).
 
-    Log out and back in (or restart) so all Dock, Finder and input
-    settings take full effect.
+    >>> LOG OUT and back in (or restart) now. <<<
+    Mouse right-click, scroll direction and pointer speed only load at login,
+    so they will NOT change until you do this.
 
 EOF
