@@ -51,34 +51,22 @@ video) — use **System → Hotkey**.
 
 ## Layout as installed
 
-### Page 1 — HOME
+### Home
 
 | | | | | |
 |---|---|---|---|---|
-| 🧪 **Cyberlabs** *(folder)* | 🎓 **Teach** *(folder)* | 📣 **Studio** *(folder)* | 🛰 **Infra** *(folder)* | 🎙 `mic-toggle` |
-| ⚡ `claude-here` | 🚀 `squad-run` | 📂 `outputs-latest` | 🔄 `sync-now` | 🎬 `meeting-mode` |
-| 🌙 `focus-toggle` | 📸 Hotkey ⇧⌘5 | 📅 `join-next-meeting` | 🩺 `health-check` | ⏯ Multimedia |
+| 🧪 Cyberlabs *(folder)* | 🎓 Teach *(folder)* | 📣 Studio *(folder)* | 🛰 Infra *(folder)* | 🎙 Mic |
+| ⚡ Claude | 🚀 Run Squad | 📂 Outputs | 🔄 Sync | 🎬 Meeting |
+| 🌙 Focus | 📸 Screen ⇧⌘5 | 📅 Join | 🩺 Health | ⏯ Media |
 
-### Cyberlabs folder
+### Folders
 
-`claude-here` · `claude-resume` · `squad-run` · `squad-list` · `outputs-latest` ·
-`repo-status` · `sync-now` · `workspace-code` · Website → github.com/your repos
+- **Cyberlabs** — Claude · Resume · Run Squad · Squads · Outputs · Repos · Sync · VS Code
+- **Teach** — Class Mode · Focus · Join · Screen ⇧⌘5 · Outputs
+- **Studio** — ContentOS · Instagram · LinkedIn · YT Studio · Site · Run Squad
+- **Infra** — VPS · Health · Meraki · Cloudflare · Repos
 
-### Teach folder (FIAP)
-
-`class-mode` · Website → FIAP portal · Hotkey ⌥⌘P (Keynote play) · Hotkey ⇧⌘5 (record) ·
-`focus-toggle` · Website → your class deck folder
-
-### Studio folder (social)
-
-Website → ContentOS `https://contentos.clebervisconti.com` · Website → Instagram ·
-Website → LinkedIn · Website → YouTube Studio · Shortcut → `Clip2md` · `squad-run`
-(pick `cv-brand-agency` / `newsletter-editorial` / `youtube-creators`)
-
-### Infra folder
-
-`vps-ssh` · `health-check` · Website → Meraki dashboard · Website → Splunk Cloud ·
-Website → Cloudflare dashboard · `repo-status`
+Edit the `HOME` / `FOLDERS` dicts in `install-profile.py`, then regenerate and re-import.
 
 ## Focus key setup (one-time, ~2 min)
 
