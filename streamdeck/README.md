@@ -4,11 +4,33 @@ Scripts behind the Elgato Stream Deck MK.2 (15 keys, 5×3). Everything here is p
 shell in git, so a new machine just needs `./build-apps.sh` and a profile import.
 
 ```
-lib.sh          shared helpers (root resolution, PATH, notify, Terminal launcher)
-bin/*.sh        the actual scripts — edit these
-build-apps.sh   regenerates apps/ ; run after adding or renaming a script
-apps/*.app      thin launchers the Stream Deck binds to (generated, do not edit)
+lib.sh             shared helpers (root resolution, PATH, notify, Terminal launcher)
+bin/*.sh           the actual scripts — edit these
+build-apps.sh      regenerates apps/ ; run after adding or renaming a script
+apps/*.app         thin launchers the Stream Deck binds to (generated, do not edit)
+install-profile.py emits a .streamDeckProfile with the whole layout pre-bound
 ```
+
+## Install
+
+```bash
+cd ~/cyberlabs/scripts/streamdeck
+./build-apps.sh
+python3 install-profile.py ~/Downloads/Cyberlabs.streamDeckProfile
+open ~/Downloads/Cyberlabs.streamDeckProfile
+```
+
+That imports a profile named **Cyberlabs** with all 15 home keys and the four
+folders already bound. Pick it from the profile dropdown in the Stream Deck app;
+to make it the one that loads on plug-in, set it as default there.
+
+### Do not write into ProfilesV3 directly
+
+Tried, twice, does not work. The app only reads profiles at launch, and quitting it
+by AppleScript registers as `last session did not properly end` — on the next launch
+it restores a backup and re-imports `StreamDeck_macDefault.streamDeckProfile`,
+silently throwing away anything written by hand. Importing is the supported path and
+needs no restart. The generator documents the format details the app is strict about.
 
 ## Why .app bundles
 
@@ -17,17 +39,17 @@ editor; given a `.app` it runs the script with no Terminal window and no Dock bo
 `build-apps.sh` generates one `LSUIElement` bundle per script that `exec`s the real file,
 so the bundles never drift from the scripts.
 
-## Binding a key
+## Binding one key by hand
 
-1. Stream Deck app → drag **System → Open** onto a key.
-2. **App / File** → pick `scripts/streamdeck/apps/<name>.app`.
-3. Set the title and icon.
+If you add a script and don't want to regenerate the profile: drag **System → Open**
+onto a key, then set **App / File** to the bundle. The path must be **absolute and
+wrapped in double quotes** — `"/Users/clebervisconti/cyberlabs/scripts/streamdeck/apps/mic-toggle.app"`.
+A `~` will not expand and the key will do nothing.
 
-Anything that is just a URL doesn't need a script — use the built-in **System → Website**
-action. Anything that is a keystroke in an app (Zoom mute, Webex video) — use
-**System → Hotkey**.
+URLs need no script — use **System → Website**. App keystrokes (Zoom mute, Webex
+video) — use **System → Hotkey**.
 
-## Suggested layout
+## Layout as installed
 
 ### Page 1 — HOME
 
