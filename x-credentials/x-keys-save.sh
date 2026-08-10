@@ -37,9 +37,10 @@ for row in "${ITEMS[@]}"; do
   if [[ "$want" != "0" && "${#val}" -ne "$want" ]]; then
     printf '  !! warning: got %s chars, expected %s — storing anyway\n' "${#val}" "$want"
   fi
-  printf '%s\n%s\n' "$val" "$val" \
-    | security add-generic-password -a "$ACC" -s "cyberlabs-${name}" \
-        -D "X API" -j "PostizCS app 32972511" -U -w >/dev/null 2>&1
+  # NOTE: security reads -w from /dev/tty when a terminal exists, so piping the
+  # value in does not work interactively. Pass it inline instead.
+  security add-generic-password -a "$ACC" -s "cyberlabs-${name}" \
+      -D "X API" -j "PostizCS app 32972511" -U -w "$val" >/dev/null 2>&1
   back=$(security find-generic-password -a "$ACC" -s "cyberlabs-${name}" -w 2>/dev/null)
   if [[ "$back" == "$val" ]]; then
     printf '  -> saved (%s chars)\n' "${#val}"
