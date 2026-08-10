@@ -1,22 +1,22 @@
 #!/bin/bash
-# Copy the cyberlabs-x-* Keychain items from HULK to b4tm4n so both machines match.
+# Copy the cyberlabs-x-* Keychain items from TIGER to lion so both machines match.
 #
-# Run on HULK, after x-keys-save.sh:
-#     ~/Cyberlabs/scripts/x-credentials/x-keys-sync-b4tm4n.sh
+# Run on TIGER, after x-keys-save.sh:
+#     ~/Cyberlabs/scripts/x-credentials/x-keys-sync-lion.sh
 #
-# Why it works this way: b4tm4n's login keychain is locked to SSH, and
+# Why it works this way: lion's login keychain is locked to SSH, and
 # `security unlock-keychain` only unlocks for the CURRENT security session — a
 # later ssh connection is locked again. So the unlock and the writes have to
-# happen inside one interactive session. You'll be asked for b4tm4n's login
+# happen inside one interactive session. You'll be asked for lion's login
 # password once, by macOS itself.
 #
-# Values are base64-encoded into a 0600 staging file on b4tm4n, applied, then
+# Values are base64-encoded into a 0600 staging file on lion, applied, then
 # deleted (also removed on any exit path via trap). They are never in argv and
 # never in shell history. The brief on-disk window is the tradeoff for not
 # having to retype every value on the second machine.
 set -uo pipefail
 
-HOST=b4tm4n
+HOST=lion
 ACC="$USER"
 REMOTE_DATA="/tmp/.xk-$$.dat"
 NAMES=(
@@ -62,7 +62,7 @@ fi
 # It contains no secrets — only the path of the staging file.
 REMOTE_SCRIPT="
 trap 'rm -f $REMOTE_DATA' EXIT INT TERM
-echo 'Unlocking b4tm4n login keychain (your b4tm4n login password):'
+echo 'Unlocking lion login keychain (your lion login password):'
 if ! security unlock-keychain; then
   echo 'unlock failed - nothing written' >&2; exit 1
 fi

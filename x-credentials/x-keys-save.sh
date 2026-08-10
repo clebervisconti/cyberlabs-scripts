@@ -1,6 +1,6 @@
 #!/bin/bash
 # Capture every X credential for app PostizCS (32972511) into the local Keychain.
-# Run this on HULK while the portal has the regenerated values on screen.
+# Run this on TIGER while the portal has the regenerated values on screen.
 # Values are typed once, never echoed, never in shell history, never in argv.
 # Blank input = keep whatever is already stored (skip that item).
 set -uo pipefail
