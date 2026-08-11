@@ -1,6 +1,7 @@
 #!/bin/bash
 # Force the workspace repo sync that normally runs on the Claude Code Stop hook.
 source "$(dirname "$0")/../lib.sh"
+require_root
 
 HOOK="$ROOT/.claude/sync-all.sh"
 if [[ ! -x "$HOOK" ]]; then

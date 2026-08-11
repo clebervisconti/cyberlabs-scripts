@@ -2,6 +2,7 @@
 # Pick a squad from a native list, then start a Claude Code session already
 # primed with /squad run <name>.
 source "$(dirname "$0")/../lib.sh"
+require_root
 
 squads=$(find "$ROOT/squads" -mindepth 1 -maxdepth 1 -type d ! -name management ! -name '.*' -exec basename {} \; | sort)
 [[ -z "$squads" ]] && { notify "🚀 No squads" "Nothing under squads/"; exit 1; }

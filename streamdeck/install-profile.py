@@ -59,6 +59,19 @@ def app(script, title):
                   {"path": f'"{bundle}"'}, title)
 
 
+def macapp(path, title):
+    """Open action pointing at an installed macOS app (Webex, OBS, …).
+
+    Only warns when the app is missing so the same generator runs on machines
+    that don't have every app yet — the key simply does nothing until it's
+    installed there.
+    """
+    if not Path(path).exists():
+        print(f"note: {path} not installed here — key '{title}' bound anyway")
+    return _shell("com.elgato.streamdeck.system.open", "Open",
+                  {"path": f'"{path}"'}, title)
+
+
 def website(url, title):
     return _shell("com.elgato.streamdeck.system.website", "Website",
                   {"openInBrowser": True, "path": url}, title)
@@ -106,31 +119,45 @@ SCREEN = dict(cmd=True, shift=True, native=21, qt=52, vk=21)
 
 # ─── layout ────────────────────────────────────────────────────────────────────
 # Keys are "col,row" on the MK.2's 5x3 grid.
+# Home = daily drivers. Four folders: Cisco (work), Cyberlabs (lab),
+# Streaming (OBS/YouTube), FIAP (teaching).
 
+CISCO = uuid.uuid4()
 CYBERLABS = uuid.uuid4()
-TEACH = uuid.uuid4()
-STUDIO = uuid.uuid4()
-INFRA = uuid.uuid4()
+STREAMING = uuid.uuid4()
+FIAP = uuid.uuid4()
 
 HOME = {
-    "0,0": folder(str(CYBERLABS), "Cyberlabs"),
-    "1,0": folder(str(TEACH), "Teach"),
-    "2,0": folder(str(STUDIO), "Studio"),
-    "3,0": folder(str(INFRA), "Infra"),
+    "0,0": folder(str(CISCO), "Cisco"),
+    "1,0": folder(str(CYBERLABS), "Cyberlabs"),
+    "2,0": folder(str(STREAMING), "Streaming"),
+    "3,0": folder(str(FIAP), "FIAP"),
     "4,0": app("mic-toggle", "Mic"),
     "0,1": app("claude-here", "Claude"),
-    "1,1": app("squad-run", "Run Squad"),
-    "2,1": app("outputs-latest", "Outputs"),
-    "3,1": app("sync-now", "Sync"),
-    "4,1": app("meeting-mode", "Meeting"),
+    "1,1": macapp("/System/Applications/Photo Booth.app", "Camera"),
+    "2,1": hotkey("Screen", **SCREEN),
+    "3,1": app("meeting-mode", "Meeting"),
+    "4,1": app("join-next-meeting", "Join"),
     "0,2": app("focus-toggle", "Focus"),
-    "1,2": hotkey("Screen", **SCREEN),
-    "2,2": app("join-next-meeting", "Join"),
+    "1,2": app("outputs-latest", "Outputs"),
+    "2,2": app("sync-now", "Sync"),
     "3,2": app("health-check", "Health"),
     "4,2": media(5),
 }
 
 FOLDERS = {
+    CISCO: ("Cisco", {
+        "0,0": back(),
+        "1,0": macapp("/Applications/Webex.app", "Webex"),
+        "2,0": app("webex-mute", "Mute WX"),
+        "3,0": app("webex-camera", "Cam WX"),
+        "4,0": app("webex-share", "Share WX"),
+        "0,1": website("https://cisco.sharepoint.com", "SharePoint"),
+        "1,1": website("https://outlook.office.com/mail/", "Outlook"),
+        "2,1": app("join-next-meeting", "Join"),
+        "3,1": app("meeting-mode", "Meeting"),
+        "4,1": app("mic-toggle", "Mic"),
+    }),
     CYBERLABS: ("Cyberlabs", {
         "0,0": back(),
         "1,0": app("claude-here", "Claude"),
@@ -141,31 +168,35 @@ FOLDERS = {
         "1,1": app("repo-status", "Repos"),
         "2,1": app("sync-now", "Sync"),
         "3,1": app("workspace-code", "VS Code"),
+        "4,1": app("vps-ssh", "VPS"),
+        "0,2": app("health-check", "Health"),
+        "1,2": website("http://lion.local:8000", "Splunk"),
+        "2,2": website("https://dashboard.meraki.com", "Meraki"),
+        "3,2": website("https://dash.cloudflare.com", "Cloudflare"),
     }),
-    TEACH: ("Teach", {
+    STREAMING: ("Streaming", {
+        "0,0": back(),
+        "1,0": macapp("/Applications/OBS.app", "OBS"),
+        "2,0": app("obs-record", "REC"),
+        "3,0": app("streaming-mode", "Stream Mode"),
+        "4,0": app("mic-toggle", "Mic"),
+        "0,1": macapp("/System/Applications/Photo Booth.app", "Cam Check"),
+        "1,1": website("https://studio.youtube.com", "YT Studio"),
+        "2,1": website("https://www.youtube.com", "YouTube"),
+        "3,1": hotkey("Screen", **SCREEN),
+        "4,1": app("outputs-latest", "Outputs"),
+    }),
+    FIAP: ("FIAP", {
         "0,0": back(),
         "1,0": app("class-mode", "Class Mode"),
-        "2,0": app("focus-toggle", "Focus"),
-        "3,0": app("join-next-meeting", "Join"),
-        "4,0": hotkey("Screen", **SCREEN),
-        "0,1": app("outputs-latest", "Outputs"),
-    }),
-    STUDIO: ("Studio", {
-        "0,0": back(),
-        "1,0": website("https://contentos.clebervisconti.com", "ContentOS"),
-        "2,0": website("https://www.instagram.com", "Instagram"),
-        "3,0": website("https://www.linkedin.com/feed/", "LinkedIn"),
-        "4,0": website("https://studio.youtube.com", "YT Studio"),
-        "0,1": app("squad-run", "Run Squad"),
-        "1,1": website("https://clebervisconti.com", "Site"),
-    }),
-    INFRA: ("Infra", {
-        "0,0": back(),
-        "1,0": app("vps-ssh", "VPS"),
-        "2,0": app("health-check", "Health"),
-        "3,0": website("https://dashboard.meraki.com", "Meraki"),
-        "4,0": website("https://dash.cloudflare.com", "Cloudflare"),
-        "0,1": app("repo-status", "Repos"),
+        "2,0": macapp("/Applications/Microsoft Teams.app", "Teams"),
+        "3,0": app("teams-share", "Share"),
+        "4,0": app("teams-camera", "Camera"),
+        "0,1": app("teams-mute", "Mute"),
+        "1,1": app("teams-record", "Record"),
+        "2,1": website("https://www.youtube.com", "YouTube"),
+        "3,1": website("https://on.fiap.com.br", "FIAP ON"),
+        "4,1": hotkey("Screen", **SCREEN),
     }),
 }
 
