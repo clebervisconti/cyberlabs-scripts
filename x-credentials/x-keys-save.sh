@@ -1,11 +1,16 @@
 #!/bin/bash
-# Capture every X credential for app PostizCS (32972511) into the local Keychain.
+# Capture every X credential into the local Keychain.
 # Run this on TIGER while the portal has the regenerated values on screen.
 # Values are typed once, never echoed, never in shell history, never in argv.
 # Blank input = keep whatever is already stored (skip that item).
+#
+# Which app the values belong to is recorded in each item's comment field, so a
+# stale key is identifiable later. Override when the app changes:
+#     X_APP_LABEL="Cyberlabs app 33296556" ./x-keys-save.sh
 set -uo pipefail
 
 ACC="$USER"
+APP_LABEL="${X_APP_LABEL:-Cyberlabs app 33296556}"
 ok=0; skip=0
 
 # service-suffix | prompt label | expected length (0 = don't check)
@@ -24,6 +29,7 @@ ITEMS=(
 declare -a STORED_NAMES=() STORED_VALS=()
 
 echo "X credentials -> Keychain (service prefix: cyberlabs-)"
+echo "Tagging every item as: $APP_LABEL"
 echo "Press Enter to skip an item and keep the existing value."
 echo
 
@@ -40,7 +46,7 @@ for row in "${ITEMS[@]}"; do
   # NOTE: security reads -w from /dev/tty when a terminal exists, so piping the
   # value in does not work interactively. Pass it inline instead.
   security add-generic-password -a "$ACC" -s "cyberlabs-${name}" \
-      -D "X API" -j "PostizCS app 32972511" -U -w "$val" >/dev/null 2>&1
+      -D "X API" -j "$APP_LABEL" -U -w "$val" >/dev/null 2>&1
   back=$(security find-generic-password -a "$ACC" -s "cyberlabs-${name}" -w 2>/dev/null)
   if [[ "$back" == "$val" ]]; then
     printf '  -> saved (%s chars)\n' "${#val}"
